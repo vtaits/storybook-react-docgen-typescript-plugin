@@ -1,6 +1,6 @@
 import path from "node:path";
 import createDebug from "debug";
-import { matcher } from "micromatch";
+import picomatch from "picomatch";
 import * as docGen from "react-docgen-typescript";
 import ts from "typescript";
 import type * as webpack from "webpack";
@@ -52,7 +52,7 @@ function getTSConfigFile(tsconfigPath: string): ts.ParsedCommandLine {
 
 /** Create a glob matching function. */
 const matchGlob = (globs?: string[]) => {
-  const matchers = (globs || []).map((g) => matcher(g, { dot: true }));
+  const matchers = (globs || []).map((g) => picomatch(g, { dot: true }));
 
   return (filename: string) =>
     Boolean(filename && matchers.find((match) => match(filename)));
