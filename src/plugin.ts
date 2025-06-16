@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import path from "node:path";
 import createDebug from "debug";
 import findCacheDir from "find-cache-dir";
-import flatCache from "flat-cache";
+import { FlatCache } from 'flat-cache';
 import { matcher } from "micromatch";
 import * as docGen from "react-docgen-typescript";
 import ts from "typescript";
@@ -65,7 +65,9 @@ const matchGlob = (globs?: string[]) => {
 // The cache is used only with webpack 4 for now as webpack 5 comes with caching of its own
 const cacheId = "ts-docgen";
 const cacheDir = findCacheDir({ name: cacheId });
-const cache = flatCache.load(cacheId, cacheDir);
+
+const cache = new FlatCache();
+cache.load(cacheId, cacheDir);
 
 /** Run the docgen parser and inject the result into the output */
 /** This is used for webpack 4 or earlier */

@@ -35,7 +35,7 @@
     "debug": "^4.1.1",
     "endent": "^2.0.1",
     "find-cache-dir": "^3.3.1",
-    "flat-cache": "^3.0.4",
+    "flat-cache": "^6.1.10",
     "micromatch": "^4.0.2",
     "react-docgen-typescript": "^2.1.1",
     "tslib": "^2.0.0"
@@ -44,7 +44,6 @@
     "@biomejs/biome": "^1.9.4",
     "@types/debug": "^4.1.5",
     "@types/find-cache-dir": "^3.2.0",
-    "@types/flat-cache": "^2.0.0",
     "@types/jest": "^29.5.14",
     "@types/micromatch": "^4.0.1",
     "@types/node": "^24.0.1",
