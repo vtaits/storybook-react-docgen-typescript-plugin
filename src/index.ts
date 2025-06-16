@@ -12,6 +12,7 @@ try {
   require.resolve("typescript");
   plugin = require("./plugin").default;
 } catch (error) {
+  console.log(error);
   plugin = EmptyPlugin as unknown as DocgenPluginType;
 }
 

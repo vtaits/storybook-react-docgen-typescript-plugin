@@ -1,13 +1,10 @@
-import crypto from "node:crypto";
 import path from "node:path";
 import createDebug from "debug";
-import findCacheDir from "find-cache-dir";
-import { FlatCache } from 'flat-cache';
 import { matcher } from "micromatch";
 import * as docGen from "react-docgen-typescript";
 import ts from "typescript";
 import type * as webpack from "webpack";
-
+import { DocGenDependency } from "./dependency";
 import {
   type GeneratorOptions,
   generateDocgenCodeBlock,
@@ -15,7 +12,6 @@ import {
 import type { LoaderOptions } from "./types";
 
 const debugExclude = createDebug("docgen:exclude");
-const debugInclude = createDebug("docgen:include");
 
 interface TypescriptOptions {
   /**
@@ -62,79 +58,6 @@ const matchGlob = (globs?: string[]) => {
     Boolean(filename && matchers.find((match) => match(filename)));
 };
 
-// The cache is used only with webpack 4 for now as webpack 5 comes with caching of its own
-const cacheId = "ts-docgen";
-const cacheDir = findCacheDir({ name: cacheId });
-
-const cache = new FlatCache();
-cache.load(cacheId, cacheDir);
-
-/** Run the docgen parser and inject the result into the output */
-/** This is used for webpack 4 or earlier */
-function processModule(
-  parser: docGen.FileParser,
-  webpackModule: webpack.Module,
-  tsProgram: ts.Program,
-  loaderOptions: Required<LoaderOptions>,
-) {
-  if (!webpackModule) {
-    return;
-  }
-
-  const hash = crypto
-    .createHash("sha1")
-    // eslint-disable-next-line
-    // @ts-ignore
-    // eslint-disable-next-line
-    .update(webpackModule._source._value)
-    .digest("hex");
-  const cached = cache.getKey(hash);
-
-  if (cached) {
-    // eslint-disable-next-line
-    // @ts-ignore
-    // eslint-disable-next-line
-    debugInclude(`Got cached docgen for "${webpackModule.request}"`);
-    // eslint-disable-next-line
-    // @ts-ignore
-    // eslint-disable-next-line
-    webpackModule._source._value = cached;
-    return;
-  }
-
-  // eslint-disable-next-line
-  // @ts-ignore: Webpack 4 type
-  const { userRequest } = webpackModule;
-
-  const componentDocs = parser.parseWithProgramProvider(
-    userRequest,
-    () => tsProgram,
-  );
-
-  if (!componentDocs.length) {
-    return;
-  }
-
-  const docs = generateDocgenCodeBlock({
-    filename: userRequest,
-    source: userRequest,
-    componentDocs,
-    ...loaderOptions,
-  }).substring(userRequest.length);
-
-  // eslint-disable-next-line
-  // @ts-ignore: Webpack 4 type
-  // eslint-disable-next-line
-  let sourceWithDocs = webpackModule._source._value;
-
-  sourceWithDocs += `\n${docs}\n`;
-
-  // eslint-disable-next-line
-  // @ts-ignore: Webpack 4 type
-  // eslint-disable-next-line
-  webpackModule._source._value = sourceWithDocs;
-}
-
 /** Inject typescript docgen information into modules at the end of a build */
 export default class DocgenPlugin implements webpack.WebpackPluginInstance {
   public static defaultOptions = {
@@ -158,7 +81,7 @@ export default class DocgenPlugin implements webpack.WebpackPluginInstance {
     if (isWebpack5) {
       this.applyWebpack5(compiler);
     } else {
-      this.applyWebpack4(compiler);
+      throw new Error("Webpack earlier than 5.x is not supported");
     }
   }
 
@@ -177,12 +100,6 @@ export default class DocgenPlugin implements webpack.WebpackPluginInstance {
     compiler.hooks.compilation.tap(
       pluginName,
       (compilation: webpack.Compilation) => {
-        // Since this file is needed only for webpack 5, load it only then
-        // to simplify the implementation of the file.
-        //
-        // eslint-disable-next-line
-        const { DocGenDependency } = require("./dependency");
-
         compilation.dependencyTemplates.set(
           // eslint-disable-next-line
           // @ts-ignore: Webpack 4 type
@@ -253,12 +170,6 @@ export default class DocgenPlugin implements webpack.WebpackPluginInstance {
           // 3. Process and parse each module and add the type information
           // as a dependency
           for (const [name, module] of modulesToProcess) {
-            // Since this file is needed only for webpack 5, load it only then
-            // to simplify the implementation of the file.
-            //
-            // eslint-disable-next-line
-            const { DocGenDependency } = require("./dependency");
-
             module.addDependency(
               // eslint-disable-next-line
               // @ts-ignore: Webpack 4 type
@@ -278,95 +189,6 @@ export default class DocgenPlugin implements webpack.WebpackPluginInstance {
         });
       },
     );
-  }
-
-  applyWebpack4(compiler: webpack.Compiler): void {
-    const { docgenOptions, compilerOptions } = this.getOptions();
-    const parser = docGen.withCompilerOptions(compilerOptions, docgenOptions);
-    const { exclude = [], include = ["**/**.tsx"] } = this.options;
-    const isExcluded = matchGlob(exclude);
-    const isIncluded = matchGlob(include);
-
-    compiler.hooks.make.tap(this.name, (compilation) => {
-      compilation.hooks.seal.tap(this.name, () => {
-        const modulesToProcess: webpack.Module[] = [];
-
-        for (const module of compilation.modules) {
-          // eslint-disable-next-line
-          // @ts-ignore: Webpack 4 type
-          if (!module.built) {
-            // eslint-disable-next-line
-            // @ts-ignore: Webpack 4 type
-            debugExclude(`Ignoring un-built module: ${module.userRequest}`);
-            continue;
-          }
-
-          // eslint-disable-next-line
-          // @ts-ignore: Webpack 4 type
-          if (module.external) {
-            // eslint-disable-next-line
-            // @ts-ignore: Webpack 4 type
-            debugExclude(`Ignoring external module: ${module.userRequest}`);
-            continue;
-          }
-
-          // eslint-disable-next-line
-          // @ts-ignore: Webpack 4 type
-          if (!module.rawRequest) {
-            debugExclude(
-              // eslint-disable-next-line
-              // @ts-ignore: Webpack 4 type
-              `Ignoring module without "rawRequest": ${module.userRequest}`,
-            );
-            continue;
-          }
-
-          // eslint-disable-next-line
-          // @ts-ignore: Webpack 4 type
-          if (isExcluded(module.userRequest)) {
-            debugExclude(
-              // eslint-disable-next-line
-              // @ts-ignore: Webpack 4 type
-              `Module not matched in "exclude": ${module.userRequest}`,
-            );
-            continue;
-          }
-
-          // eslint-disable-next-line
-          // @ts-ignore: Webpack 4 type
-          if (!isIncluded(module.userRequest)) {
-            debugExclude(
-              // eslint-disable-next-line
-              // @ts-ignore: Webpack 4 type
-              `Module not matched in "include": ${module.userRequest}`,
-            );
-            continue;
-          }
-
-          // eslint-disable-next-line
-          // @ts-ignore: Webpack 4 type
-          debugInclude(module.userRequest);
-          modulesToProcess.push(module);
-        }
-
-        const tsProgram = ts.createProgram(
-          // eslint-disable-next-line
-          // @ts-ignore: Webpack 4 type
-          modulesToProcess.map((v) => v.userRequest),
-          compilerOptions,
-        );
-
-        for (const m of modulesToProcess) {
-          processModule(parser, m, tsProgram, {
-            docgenCollectionName: "STORYBOOK_REACT_CLASSES",
-            setDisplayName: true,
-            typePropName: "type",
-          });
-        }
-
-        cache.save();
-      });
-    });
   }
 
   getOptions(): {
