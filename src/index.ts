@@ -1,9 +1,6 @@
-/* eslint-disable  */
-
-import type { DocgenPluginType, PluginOptions } from "./plugin";
+import type { DocgenPluginType } from "./plugin";
 
 class EmptyPlugin {
-  constructor(_: PluginOptions) {}
   apply() {}
 }
 
@@ -15,7 +12,7 @@ try {
   require.resolve("typescript");
   plugin = require("./plugin").default;
 } catch (error) {
-  plugin = EmptyPlugin as any;
+  plugin = EmptyPlugin as unknown as DocgenPluginType;
 }
 
 export { PluginOptions } from "./plugin";

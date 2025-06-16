@@ -1,7 +1,7 @@
-import webpack, { Configuration } from "webpack";
-import { createFsFromVolume, IFs, Volume } from "memfs";
+import { type IFs, Volume, createFsFromVolume } from "memfs";
+import webpack, { type Configuration } from "webpack";
 import ReactDocgenTypeScriptPlugin from "..";
-import { LoaderOptions } from "../types";
+import type { LoaderOptions } from "../types";
 
 // eslint-disable-next-line
 const joinPath = require("memory-fs/lib/join");
@@ -30,7 +30,7 @@ function compile(config: Configuration): Promise<string> {
     // eslint-disable-next-line
     // @ts-ignore: There's a type mismatch but this should work based on webpack source
     compiler.outputFileSystem = ensureWebpackMemoryFs(
-      createFsFromVolume(new Volume())
+      createFsFromVolume(new Volume()),
     );
     const memfs = compiler.outputFileSystem;
 
@@ -43,6 +43,10 @@ function compile(config: Configuration): Promise<string> {
         return reject(stats.toString("errors-only"));
       }
 
+      if (!memfs) {
+        return reject(stats?.toString("memfs is null"));
+      }
+
       memfs.readFile(
         "./dist/main.js",
         {
@@ -50,7 +54,7 @@ function compile(config: Configuration): Promise<string> {
         },
         // eslint-disable-next-line
         // @ts-ignore: Type mismatch again
-        (err, data) => (err ? reject(err) : resolve(data))
+        (err, data) => (err ? reject(err) : resolve(data)),
       );
 
       return undefined;
@@ -60,7 +64,7 @@ function compile(config: Configuration): Promise<string> {
 
 const getConfig = (
   options = {},
-  config: { title?: string } = {}
+  config: { title?: string } = {},
 ): Configuration => ({
   mode: "none",
   entry: { main: "./src/__tests__/__fixtures__/Simple.tsx" },
@@ -98,21 +102,19 @@ describe("custom options", () => {
     };
     const { defaultOptions } = ReactDocgenTypeScriptPlugin;
 
-    (Object.keys(options) as Array<keyof LoaderOptions>).forEach(
-      (optionName) => {
-        const values = options[optionName];
-
-        test.each(values)(`${optionName}: %p`, (value) => {
-          const plugin = new ReactDocgenTypeScriptPlugin({
-            [optionName]: value,
-          });
-          const { generateOptions: resultOptions } = plugin.getOptions();
-
-          expect(resultOptions[optionName]).toBe(
-            value === undefined ? defaultOptions[optionName] : value
-          );
+    for (const [optionName, values] of Object.entries(options)) {
+      test.each(values)(`${optionName}: %p`, (value) => {
+        const plugin = new ReactDocgenTypeScriptPlugin({
+          [optionName]: value,
         });
-      }
-    );
+        const { generateOptions: resultOptions } = plugin.getOptions();
+
+        expect(resultOptions[optionName as keyof LoaderOptions]).toBe(
+          value === undefined
+            ? defaultOptions[optionName as keyof LoaderOptions]
+            : value,
+        );
+      });
+    }
   });
 });

@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 interface MultilineDescriptionProps {
   /** Button color. */
@@ -10,6 +10,10 @@ interface MultilineDescriptionProps {
  *
  * Second line.
  */
-export const MultilineDescriptionComponent: React.FC<MultilineDescriptionProps> = (
-  props
-) => <button style={{ backgroundColor: props.color }}>{props.children}</button>;
+export const MultilineDescriptionComponent: React.FC<
+  MultilineDescriptionProps
+> = (props) => (
+  <button type="button" style={{ backgroundColor: props.color }}>
+    {props.children}
+  </button>
+);

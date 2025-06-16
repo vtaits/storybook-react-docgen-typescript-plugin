@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 interface HyphenatedPropNameProps {
   /** Button color. */
@@ -9,9 +9,9 @@ interface HyphenatedPropNameProps {
  * A component with a hyphenated prop name.
  */
 export const HyphenatedPropNameComponent: React.FC<HyphenatedPropNameProps> = (
-  props
+  props,
 ) => (
-  <button style={{ backgroundColor: props["button-color"] }}>
+  <button type="button" style={{ backgroundColor: props["button-color"] }}>
     {props.children}
   </button>
 );

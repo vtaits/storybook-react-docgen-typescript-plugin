@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 interface DefaultPropValueComponentProps {
   /**
@@ -22,10 +22,14 @@ interface DefaultPropValueComponentProps {
 /**
  * Component with a prop with a default value.
  */
-export const DefaultPropValueComponent: React.FC<DefaultPropValueComponentProps> = (
-  props
-) => (
-  <button disabled={props.disabled} style={{ backgroundColor: props.color }}>
+export const DefaultPropValueComponent: React.FC<
+  DefaultPropValueComponentProps
+> = (props) => (
+  <button
+    type="button"
+    disabled={props.disabled}
+    style={{ backgroundColor: props.color }}
+  >
     {props.counter}
     {props.children}
   </button>

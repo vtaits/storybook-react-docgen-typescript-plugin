@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import * as webpack from "webpack";
+import type * as webpack from "webpack";
 
 // eslint-disable-next-line
 // @ts-ignore: What's the right way to refer to this one?
@@ -46,23 +46,25 @@ class DocGenDependency extends NullDependency {
 
 makeSerializable(
   DocGenDependency,
-  "react-docgen-typescript-plugin/dist/dependency"
+  "react-docgen-typescript-plugin/dist/dependency",
 );
 
 type NullDependencyTemplateType = InstanceType<
   typeof webpack.dependencies.NullDependency.Template
 >;
-class DocGenTemplate extends NullDependency.Template
-  implements NullDependencyTemplateType {
+class DocGenTemplate
+  extends NullDependency.Template
+  implements NullDependencyTemplateType
+{
   // eslint-disable-next-line
   // @ts-ignore: Webpack 4 type
   apply: NullDependencyTemplateType["apply"] = (
     dependency: DocGenDependency,
-    source
+    source,
   ) => {
     if (dependency.codeBlock) {
       // Insert to the end
-      source.insert(Infinity, dependency.codeBlock);
+      source.insert(Number.POSITIVE_INFINITY, dependency.codeBlock);
     }
   };
 }

@@ -1,9 +1,12 @@
-import fs from "fs";
-import path from "path";
-import { parse, ParserOptions } from "react-docgen-typescript/lib/parser.js";
+import fs from "node:fs";
+import path from "node:path";
 import {
+  type ParserOptions,
+  parse,
+} from "react-docgen-typescript/lib/parser.js";
+import {
+  type GeneratorOptions,
   generateDocgenCodeBlock,
-  GeneratorOptions,
 } from "../generateDocgenCodeBlock";
 
 function getGeneratorOptions(parserOptions: ParserOptions = {}) {
@@ -29,15 +32,15 @@ function loadFixtureTests(): GeneratorOptions[] {
 
 const fixtureTests: GeneratorOptions[] = loadFixtureTests();
 const simpleFixture = fixtureTests.find(
-  (f) => f.filename === "Simple.tsx"
+  (f) => f.filename === "Simple.tsx",
 ) as GeneratorOptions;
 
 describe("component fixture", () => {
-  fixtureTests.forEach((generatorOptions) => {
+  for (const generatorOptions of fixtureTests) {
     it(`${generatorOptions.filename} has code block generated`, () => {
       expect(generateDocgenCodeBlock(generatorOptions)).toMatchSnapshot();
     });
-  });
+  }
 });
 
 it("adds component to docgen collection", () => {
@@ -45,7 +48,7 @@ it("adds component to docgen collection", () => {
     generateDocgenCodeBlock({
       ...simpleFixture,
       docgenCollectionName: "STORYBOOK_REACT_CLASSES",
-    })
+    }),
   ).toMatchSnapshot();
 });
 
@@ -53,8 +56,8 @@ it("generates value info for enums", () => {
   expect(
     generateDocgenCodeBlock(
       getGeneratorOptions({ shouldExtractLiteralValuesFromEnum: true })(
-        "DefaultPropValue.tsx"
-      )
-    )
+        "DefaultPropValue.tsx",
+      ),
+    ),
   ).toMatchSnapshot();
 });

@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 interface SimpleComponentProps {
   /** Button color. */
@@ -9,5 +9,7 @@ interface SimpleComponentProps {
  * A simple component.
  */
 export const SimpleComponent: React.FC<SimpleComponentProps> = (props) => (
-  <button style={{ backgroundColor: props.color }}>{props.children}</button>
+  <button type="button" style={{ backgroundColor: props.color }}>
+    {props.children}
+  </button>
 );

@@ -1,0 +1,10 @@
+{
+	"files": {
+		"include": ["src/**/*"]
+	},
+	"javascript": {
+		"formatter": {
+			"indentStyle": "space"
+		}
+	}
+}
