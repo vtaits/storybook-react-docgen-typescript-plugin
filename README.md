@@ -1,16 +1,19 @@
 <div align="center">
   <img  height="200"
     src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/512px-React-icon.svg.png">
-  <h1>@storybook/react-docgen-typescript-plugin</h1>
+  <h1>@vtaits/storybook-react-docgen-typescript-plugin</h1>
   <p>A webpack plugin to inject react typescript docgen information</p>
 </div>
+
+[![NPM](https://img.shields.io/npm/v/@vtaits/storybook-react-docgen-typescript-plugin.svg)](https://www.npmjs.com/package/@vtaits/storybook-react-docgen-typescript-plugin)
+![dependencies status](https://img.shields.io/librariesio/release/npm/@vtaits/storybook-react-docgen-typescript-plugin)
 
 ## Install
 
 ```sh
-npm install --save-dev @storybook/react-docgen-typescript-plugin
+npm install --save-dev @vtaits/storybook-react-docgen-typescript-plugin
 # or
-yarn add -D @storybook/react-docgen-typescript-plugin
+yarn add -D @vtaits/storybook-react-docgen-typescript-plugin
 ```
 
 ## Usage
@@ -66,31 +69,3 @@ DEBUG=docgen:* npm run storybook
 
 > Another great way of debugging your generated docs is to use a `debugger` statement in your component source file.
 > If you turn off source maps you will be able to see the code that this package generates.
-
-## Prior Art
-
-- [sn-client](https://github.com/SenseNet/sn-client/) - Inspired by this custom webpack plugin
-- [react-docgen-typescript-loader](https://github.com/strothj/react-docgen-typescript-loader/) - Webpack loader to generate docgen information from Typescript React components.
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="http://hipstersmoothie.com/"><img src="https://avatars3.githubusercontent.com/u/1192452?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andrew Lisowski</b></sub></a><br /><a href="https://github.com/hipstersmoothie/react-docgen-typescript-plugin/commits?author=hipstersmoothie" title="Code">💻</a> <a href="#design-hipstersmoothie" title="Design">🎨</a> <a href="https://github.com/hipstersmoothie/react-docgen-typescript-plugin/commits?author=hipstersmoothie" title="Documentation">📖</a> <a href="#ideas-hipstersmoothie" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-hipstersmoothie" title="Maintenance">🚧</a> <a href="#infra-hipstersmoothie" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/hipstersmoothie/react-docgen-typescript-plugin/commits?author=hipstersmoothie" title="Tests">⚠️</a></td>
-    <td align="center"><a href="http://shilman.net/"><img src="https://avatars2.githubusercontent.com/u/488689?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Michael Shilman</b></sub></a><br /><a href="https://github.com/hipstersmoothie/react-docgen-typescript-plugin/commits?author=shilman" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/kherock"><img src="https://avatars.githubusercontent.com/u/4993980?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kyle Herock</b></sub></a><br /><a href="https://github.com/hipstersmoothie/react-docgen-typescript-plugin/commits?author=kherock" title="Code">💻</a></td>
-    <td align="center"><a href="https://survivejs.com/"><img src="https://avatars.githubusercontent.com/u/166921?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Juho Vepsäläinen</b></sub></a><br /><a href="#infra-bebraw" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/hipstersmoothie/react-docgen-typescript-plugin/commits?author=bebraw" title="Tests">⚠️</a> <a href="https://github.com/hipstersmoothie/react-docgen-typescript-plugin/commits?author=bebraw" title="Code">💻</a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

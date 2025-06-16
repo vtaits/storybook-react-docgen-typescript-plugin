@@ -1,10 +1,13 @@
 {
-  "name": "@storybook/react-docgen-typescript-plugin",
-  "version": "1.0.1",
+  "name": "@vtaits/storybook-react-docgen-typescript-plugin",
+  "version": "2.0.0",
   "description": "A webpack plugin to inject react typescript docgen information.",
   "license": "MIT",
-  "repository": "storybookjs/react-docgen-typescript-plugin",
-  "author": "Andrew Lisowski <lisowski54@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vtaits/storybook-react-docgen-typescript-plugin.git"
+  },
+  "author": "Vadim Taits <taizvadim@gmail.com>",
   "main": "dist/index.js",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
