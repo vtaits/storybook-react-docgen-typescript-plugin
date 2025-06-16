@@ -4,7 +4,7 @@ import { matcher } from "micromatch";
 import * as docGen from "react-docgen-typescript";
 import ts from "typescript";
 import type * as webpack from "webpack";
-import { DocGenDependency } from "./dependency";
+import { DocGenDependency, DocGenTemplate } from "./dependency";
 import {
   type GeneratorOptions,
   generateDocgenCodeBlock,
@@ -101,12 +101,8 @@ export default class DocgenPlugin implements webpack.WebpackPluginInstance {
       pluginName,
       (compilation: webpack.Compilation) => {
         compilation.dependencyTemplates.set(
-          // eslint-disable-next-line
-          // @ts-ignore: Webpack 4 type
           DocGenDependency,
-          // eslint-disable-next-line
-          // @ts-ignore: Webpack 4 type
-          new DocGenDependency.Template(),
+          new DocGenTemplate(),
         );
 
         compilation.hooks.seal.tap(pluginName, () => {
@@ -123,24 +119,6 @@ export default class DocgenPlugin implements webpack.WebpackPluginInstance {
             // Ignore already built modules for webpack 5
             if (!compilation.builtModules.has(module)) {
               debugExclude(`Ignoring un-built module: ${nameForCondition}`);
-              continue;
-            }
-
-            // Ignore external modules
-            // eslint-disable-next-line
-            // @ts-ignore: Webpack 4 type
-            if (module.external) {
-              debugExclude(`Ignoring external module: ${nameForCondition}`);
-              continue;
-            }
-
-            // Ignore raw requests
-            // eslint-disable-next-line
-            // @ts-ignore: Webpack 4 type
-            if (!module.rawRequest) {
-              debugExclude(
-                `Ignoring module without "rawRequest": ${nameForCondition}`,
-              );
               continue;
             }
 
@@ -171,8 +149,6 @@ export default class DocgenPlugin implements webpack.WebpackPluginInstance {
           // as a dependency
           for (const [name, module] of modulesToProcess) {
             module.addDependency(
-              // eslint-disable-next-line
-              // @ts-ignore: Webpack 4 type
               new DocGenDependency(
                 generateDocgenCodeBlock({
                   filename: name,
