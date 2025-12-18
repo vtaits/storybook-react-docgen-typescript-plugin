@@ -1,4 +1,4 @@
-import { Volume, createFsFromVolume } from "memfs";
+import { createFsFromVolume, Volume } from "memfs";
 import webpack, { type Configuration } from "webpack";
 import ReactDocgenTypeScriptPlugin from "..";
 import type { LoaderOptions } from "../types";
@@ -8,7 +8,7 @@ function compile(config: Configuration): Promise<string> {
     const compiler = webpack(config);
 
     // eslint-disable-next-line
-    // @ts-ignore: There's a type mismatch but this should work based on webpack source
+    // @ts-expect-error: There's a type mismatch but this should work based on webpack source
     compiler.outputFileSystem = createFsFromVolume(new Volume());
     const memfs = compiler.outputFileSystem;
 
@@ -31,7 +31,7 @@ function compile(config: Configuration): Promise<string> {
           encoding: "utf-8",
         },
         // eslint-disable-next-line
-        // @ts-ignore: Type mismatch again
+        // @ts-expect-error: Type mismatch again
         (err, data) => (err ? reject(err) : resolve(data)),
       );
 

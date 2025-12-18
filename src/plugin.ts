@@ -45,7 +45,7 @@ function getTSConfigFile(tsconfigPath: string): ts.ParsedCommandLine {
       {},
       tsconfigPath,
     );
-  } catch (error) {
+  } catch (_error) {
     return {} as ts.ParsedCommandLine;
   }
 }

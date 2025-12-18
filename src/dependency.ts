@@ -1,13 +1,8 @@
-/* eslint-disable max-classes-per-file */
 import * as webpack from "webpack";
-
-// eslint-disable-next-line
-// @ts-ignore: What's the right way to refer to this one?
-import makeSerializable from "webpack/lib/util/makeSerializable.js";
-
-// eslint-disable-next-line
-// @ts-ignore: What's the right way to refer to this one?
+// @ts-expect-error: What's the right way to refer to this one?
 import NullDependency from "webpack/lib/dependencies/NullDependency.js";
+// @ts-expect-error: What's the right way to refer to this one?
+import makeSerializable from "webpack/lib/util/makeSerializable.js";
 
 // This won't be needed when only webpack 5+ can be supported. Patching for now.
 type Context = { write?: (a: string) => void; read?: () => string };
